@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 public class MainController {
     private final InputView inputView;
     private final OutputView outputView;
-    private CardController cardController;
+    private GameController gameController;
 
     private MainController(InputView inputView, OutputView outputView) {
         this.inputView = inputView;
@@ -26,8 +26,8 @@ public class MainController {
 
     public void run() {
         Players players = createPlayers();
-        cardController = CardController.of(inputView, outputView);
-        cardController.play(players);
+        gameController = GameController.of(inputView, outputView);
+        gameController.play(players);
     }
 
     private Players createPlayers() {

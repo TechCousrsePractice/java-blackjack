@@ -1,4 +1,4 @@
-package blackjack.utils;
+package blackjack.utils.validator;
 
 import static blackjack.exception.ErrorMessage.INVALID_HIT_INPUT;
 

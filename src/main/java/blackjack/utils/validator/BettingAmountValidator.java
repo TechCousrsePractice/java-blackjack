@@ -1,4 +1,4 @@
-package blackjack.utils;
+package blackjack.utils.validator;
 
 import static blackjack.exception.ErrorMessage.NOT_NUMERIC_INPUT;
 import static blackjack.exception.ErrorMessage.NOT_POSITIVE_INPUT;

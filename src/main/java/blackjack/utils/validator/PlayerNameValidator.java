@@ -1,4 +1,4 @@
-package blackjack.utils;
+package blackjack.utils.validator;
 
 import org.junit.platform.commons.util.StringUtils;
 

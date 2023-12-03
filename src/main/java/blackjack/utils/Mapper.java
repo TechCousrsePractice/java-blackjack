@@ -1,9 +1,9 @@
 package blackjack.utils;
 
-import blackjack.domain.Dealer;
+import blackjack.domain.participants.Dealer;
 import blackjack.domain.card.Cards;
-import blackjack.domain.player.Player;
-import blackjack.domain.player.Players;
+import blackjack.domain.participants.player.Player;
+import blackjack.domain.participants.player.Players;
 import blackjack.dto.*;
 
 import java.util.List;
@@ -14,13 +14,13 @@ public class Mapper {
     }
 
     public static DealerDto toDealerDto(Dealer dealer) {
-        return new DealerDto(toCardsDto(dealer.getCards()));
+        return new DealerDto(toCardsDto(dealer.getCards()), dealer.getCards().calculateTotalScore());
     }
 
     public static List<PlayerDto> toPlayerDtos(Players players) {
         return players.getPlayers().stream()
                 .map(player ->
-                        new PlayerDto(player.getName(), toCardsDto(player.getCards())))
+                        new PlayerDto(player.getName(), toCardsDto(player.getCards()), player.getCards().calculateTotalScore()))
                 .toList();
     }
 
@@ -32,6 +32,6 @@ public class Mapper {
     }
 
     public static PlayerDto toPlayerDto(Player player) {
-        return new PlayerDto(player.getName(), toCardsDto(player.getCards()));
+        return new PlayerDto(player.getName(), toCardsDto(player.getCards()), player.getCards().calculateTotalScore());
     }
 }

@@ -1,17 +1,18 @@
 package blackjack.controller;
 
-import blackjack.domain.Dealer;
+import blackjack.domain.participants.Dealer;
 import blackjack.domain.card.CardDeck;
 import blackjack.domain.card.Cards;
-import blackjack.domain.player.Players;
-import blackjack.dto.ParticipantsDto;
+import blackjack.domain.participants.Participant;
+import blackjack.domain.participants.player.Player;
+import blackjack.domain.participants.player.Players;
 import blackjack.dto.PlayerDto;
-import blackjack.dto.PlayerNamesDto;
+import blackjack.dto.ProfitDto;
 import blackjack.utils.Mapper;
+import blackjack.utils.ResultCalculator;
 import blackjack.view.InputView;
 import blackjack.view.OutputView;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 
@@ -33,17 +34,11 @@ public class GameController {
     public void play(Players players) {
         Dealer dealer = createDealerWithCards();
         distributeCardsToPlayers(players);
-        ParticipantsDto participantsDto = Mapper.toParticipantsDto(dealer, players);
-        outputView.printCardDistribution(participantsDto);
-        players.getPlayers().forEach(player -> {
-            PlayerDto playerDto = Mapper.toPlayerDto(player);
-            if (readHit(playerDto)) {
-                player.addCard(cardDeck.drawCard());
-                outputView.printUpdatedCardStatus(playerDto);
-            }
-        });
-        //TODO dealer 카드 더 받을지 여부 결정 후 실행
-
+        outputView.printCardDistribution(Mapper.toParticipantsDto(dealer, players));
+        playersDraws(players);
+        dealerDraws(dealer);
+        ProfitDto profitDto = ResultCalculator.calculateProfit(dealer, players);
+        outputView.printResult(Mapper.toParticipantsDto(dealer, players), profitDto);
     }
 
     private Dealer createDealerWithCards() {
@@ -53,6 +48,25 @@ public class GameController {
 
     private void distributeCardsToPlayers(Players players) {
         players.initializeCards(cardDeck);
+    }
+
+    private void playersDraws(Players players) {
+        players.getPlayers().forEach(player -> {
+            PlayerDto playerDto = Mapper.toPlayerDto(player);
+            askDraw(player, playerDto);
+        });
+    }
+
+    private void askDraw(Player player, PlayerDto playerDto) {
+        boolean drawAnotherCard;
+        do {
+            drawAnotherCard = readHit(playerDto);
+            if (drawAnotherCard) {
+                player.addCard(cardDeck.drawCard());
+                PlayerDto updatedPlayerDto = Mapper.toPlayerDto(player);
+                outputView.printUpdatedCardStatus(updatedPlayerDto);
+            }
+        } while (drawAnotherCard);
     }
 
 
@@ -67,6 +81,15 @@ public class GameController {
             } catch (IllegalArgumentException e) {
                 outputView.printError(e.getMessage());
             }
+        }
+    }
+
+    private void dealerDraws(Dealer dealer) {
+        boolean needsDraw = dealer.needsDraw();
+        while (needsDraw) {
+            outputView.printDealerDraw();
+            dealer.addCard(cardDeck.drawCard());
+            needsDraw = dealer.needsDraw();
         }
     }
 }

@@ -1,9 +1,9 @@
 package blackjack.view;
 
 import blackjack.dto.PlayerDto;
-import blackjack.utils.BettingAmountValidator;
-import blackjack.utils.HitValidator;
-import blackjack.utils.PlayerNameValidator;
+import blackjack.utils.validator.BettingAmountValidator;
+import blackjack.utils.validator.HitValidator;
+import blackjack.utils.validator.PlayerNameValidator;
 import camp.nextstep.edu.missionutils.Console;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class InputView {
 
     public boolean readHit(PlayerDto playerDto) {
         printLine();
-        System.out.println(String.format(ASK_HIT_FORMAT, playerDto.name()));
+        System.out.printf((ASK_HIT_FORMAT) + "%n", playerDto.name());
         String input = Console.readLine();
         return HitValidator.safeParse(input);
     }

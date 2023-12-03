@@ -1,4 +1,4 @@
-package blackjack.domain.player;
+package blackjack.domain.participants.player;
 
 import blackjack.domain.card.CardDeck;
 
@@ -17,6 +17,12 @@ public class Players {
 
     public void initializeCards(CardDeck cardDeck) {
         players.forEach(player -> player.initializeCards(cardDeck.initialDraw()));
+    }
+
+    public long getTotalBet() {
+        return players.stream()
+                .mapToLong(Player::getBettingAmount)
+                .sum();
     }
 
     public List<Player> getPlayers() {
